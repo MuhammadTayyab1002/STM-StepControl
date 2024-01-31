@@ -93,3 +93,15 @@ void tb6600_ChangePulsePerRev(tb6600_t *tb6600,uint16_t PulsePerRev)
 	tb6600->PulsePerRev=PulsePerRev;
 }
 //#############################################################################################
+
+//#############################################################################################
+void tb6600_cont(tb6600_t *tb6600)
+{
+	while(1)
+	{
+		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
+		delay_us(tb6600);
+		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_RESET);
+		delay_us(tb6600);   
+	}
+}

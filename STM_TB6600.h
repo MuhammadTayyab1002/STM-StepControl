@@ -60,6 +60,7 @@ void tb6600_Disable(tb6600_t *tb6600);
 void tb6600_ChangeDirection(tb6600_t *tb6600,Direction direction);
 void tb6600_ChangeSpeed(tb6600_t *tb6600,Speed speed);
 void tb6600_ChangePulsePerRev(tb6600_t *tb6600,uint16_t PulsePerRev);
+void tb6600_cont(tb6600_t *tb6600);
 		
 //####################################################################################################################
 		
