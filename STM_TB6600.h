@@ -4,12 +4,12 @@
 
 /*
   Author:     Muhammad Tayyab
-  WebSite:    
-  Instagram:  
-  Youtube:    
+  WebSite:    https://github.com/MuhammadTayyab1002   
   
-  Version:    0.1
-  
+  Version:    0.2
+  * Added Movement  with millimeter function
+  * Added Manual Speed Function
+  * Fix Speed Option increased
   
 */
 
@@ -45,9 +45,11 @@ typedef enum
 
 typedef enum
     {
-				Fast = 50,  ///< Counter-Clockwise
-        Medium  = 150,   ///< Clockwise
-				Slow		= 450
+				VFast 	= 50,  //12mm/sec (Dia=8mm)
+				Fast 		= 75,	 //8mm/sec (Dia=8mm)
+        Medium  = 150, //4mm/sec (Dia=8mm)   
+				Slow		= 300, //2mm/sec (Dia=8mm)
+				VSlow		= 600  //1mm/sec (Dia=8mm)
 		} Speed;
 		
 //####################################################################################################################
@@ -61,6 +63,8 @@ void tb6600_ChangeDirection(tb6600_t *tb6600,Direction direction);
 void tb6600_ChangeSpeed(tb6600_t *tb6600,Speed speed);
 void tb6600_ChangePulsePerRev(tb6600_t *tb6600,uint16_t PulsePerRev);
 void tb6600_cont(tb6600_t *tb6600);
+void tb6600_Movemm(tb6600_t *tb6600,uint16_t Millimeters);
+void tb6600_ManualSpeed(tb6600_t *tb6600,uint16_t mmpersec);
 		
 //####################################################################################################################
 		
