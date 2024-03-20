@@ -107,9 +107,12 @@ void tb6600_Set(tb6600_t *tb6600,Direction direction,Speed speed,uint16_t PulseP
 //#############################################################################################
 
 //#############################################################################################
-void tb6600_AngleMove(tb6600_t *tb6600,uint16_t Degree)
+void tb6600_AngleMove(tb6600_t *tb6600,float Degree)
 {
-	for(int i=0;i<=(tb6600->PulsePerRev)*(Degree/360);i++)
+	
+	float limit=(tb6600->PulsePerRev)*(Degree/360);
+	tb6600->Count=limit;
+	for(int i=0;i<=limit;i++)
 	{
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
 		delay_us(tb6600);
@@ -122,7 +125,10 @@ void tb6600_AngleMove(tb6600_t *tb6600,uint16_t Degree)
 //#############################################################################################
 void tb6600_AngleMove_tim(tb6600_t *tb6600,uint16_t Degree)
 {
+	tb6600->timer.Instance->ARR=(tb6600->Speed*2);
+	tb6600->timer.Instance->CCR1=(tb6600->Speed);
 	tb6600->Count=(tb6600->PulsePerRev)*(Degree/360);
+	HAL_TIM_PWM_Start(&tb6600->timer,tb6600->Channel);
 }
 //#############################################################################################
 
@@ -147,6 +153,13 @@ void tb6600_ChangeDirection(tb6600_t *tb6600,Direction direction)
 	{HAL_GPIO_WritePin(tb6600->direction_gpio,tb6600->direction_pin,GPIO_PIN_RESET);}
 	else if(direction==CCW)
 	{HAL_GPIO_WritePin(tb6600->direction_gpio,tb6600->direction_pin,GPIO_PIN_SET);}
+}
+//#############################################################################################
+
+//#############################################################################################
+void tb6600_ToggleDirection(tb6600_t *tb6600)
+{
+	HAL_GPIO_TogglePin(tb6600->direction_gpio,tb6600->direction_pin);
 }
 //#############################################################################################
 
@@ -212,10 +225,12 @@ void tb6600_cont_tim(tb6600_t *tb6600)
 //#############################################################################################
 
 //#############################################################################################
-void tb6600_Movemm(tb6600_t *tb6600,uint16_t Millimeters)
+void tb6600_Movemm(tb6600_t *tb6600,float Millimeters)
 {
-	int Degree=(Millimeters/7.5)*360; // motor moves 7.5mm per 360 degree for nema 17 on a linear guide whose dia is 8mm
-	for(int i=0;i<=(tb6600->PulsePerRev)*(Degree/360);i++)
+	float Degree=(Millimeters/7.5)*360; // motor moves 7.5mm per 360 degree for nema 17 on a linear guide whose dia is 8mm
+	float limit=(tb6600->PulsePerRev)*(Degree/360);
+	tb6600->Count=limit;
+	for(int i=0;i<=limit;i++)
 	{
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
 		delay_us(tb6600);
@@ -228,8 +243,11 @@ void tb6600_Movemm(tb6600_t *tb6600,uint16_t Millimeters)
 //#############################################################################################
 void tb6600_Movemm_tim(tb6600_t *tb6600,uint16_t Millimeters)
 {
+	tb6600->timer.Instance->ARR=(tb6600->Speed*2);
+	tb6600->timer.Instance->CCR1=(tb6600->Speed);
 	int Degree=(Millimeters/7.5)*360; // motor moves 7.5mm per 360 degree for nema 17 on a linear guide whose dia is 8mm
 	tb6600->Count=(tb6600->PulsePerRev)*(Degree/360);
+	HAL_TIM_PWM_Start(&tb6600->timer,tb6600->Channel);
 }
 //#############################################################################################
 
@@ -248,9 +266,9 @@ void tb6600_Stop_tim(tb6600_t *tb6600)
 //#############################################################################################
 
 //#############################################################################################
-TIM_HandleTypeDef* gettimer(tb6600_t *tb6600)
+TIM_HandleTypeDef gettimer(tb6600_t *tb6600)
 {
-	return &tb6600->timer;
+	return tb6600->timer;
 }
 //#############################################################################################
 
@@ -262,12 +280,17 @@ uint32_t GETVALUE(tb6600_t *tb6600)
 //#############################################################################################
 
 ////#############################################################################################
-//void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+// Use this in main.c 
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //{
-//	if(htim==gettimer(&stepper0)) stepper0 is the declared variable of tb6600
-//	{	count++; define a global variable to count pulse elasped
+//	if(htim==&htim1)
+//	{	
+//		count++;
 //		if(count==GETVALUE(&stepper0))
-//		{tb6600_Stop_tim(&stepper0);}
+//		{
+//			tb6600_Stop_tim(&stepper0);
+//			tb6600_Disable(&stepper0);
+//		}
 //  
 //	}
 //}
