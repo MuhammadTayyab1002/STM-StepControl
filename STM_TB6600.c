@@ -58,13 +58,11 @@
 //#############################################################################################
  
 //#############################################################################################
-void delay_us (tb6600_t *tb6600)
+void delay_us (tb6600_t *tb6600,uint16_t speed)
 {
 	__HAL_TIM_SET_COUNTER(&tb6600->timer,0);  // set the counter value a 0
-	while (__HAL_TIM_GET_COUNTER(&tb6600->timer) < tb6600->Speed);  // wait for the counter to reach the us input in the parameter
+ 	while (__HAL_TIM_GET_COUNTER(&tb6600->timer) < speed);  // wait for the counter to reach the us input in the parameter
 }
-//#############################################################################################
-
 //#############################################################################################
 
 //#############################################################################################
@@ -112,12 +110,12 @@ void tb6600_AngleMove(tb6600_t *tb6600,float Degree)
 	
 	float limit=(tb6600->PulsePerRev)*(Degree/360);
 	tb6600->Count=limit;
-	for(int i=0;i<=limit;i++)
+	for(int i=0;i<=tb6600->Count;i++)
 	{
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
-		delay_us(tb6600);
+		delay_us(tb6600,2);
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_RESET);
-		delay_us(tb6600);   
+		delay_us(tb6600,(tb6600->Speed*2)-2);   
 	}
 }
 //#############################################################################################
@@ -126,7 +124,7 @@ void tb6600_AngleMove(tb6600_t *tb6600,float Degree)
 void tb6600_AngleMove_tim(tb6600_t *tb6600,uint16_t Degree)
 {
 	tb6600->timer.Instance->ARR=(tb6600->Speed*2);
-	tb6600->timer.Instance->CCR1=(tb6600->Speed);
+	tb6600->timer.Instance->CCR1=(tb6600->Speed)*0.2;
 	tb6600->Count=(tb6600->PulsePerRev)*(Degree/360);
 	HAL_TIM_PWM_Start(&tb6600->timer,tb6600->Channel);
 }
@@ -206,9 +204,9 @@ void tb6600_cont(tb6600_t *tb6600)
 	while(1)
 	{
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
-		delay_us(tb6600);
+		delay_us(tb6600,2);
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_RESET);
-		delay_us(tb6600);   
+		delay_us(tb6600,(tb6600->Speed*2)-2);   
 	}
 }
 //#############################################################################################
@@ -219,7 +217,7 @@ void tb6600_cont_tim(tb6600_t *tb6600)
 	
 	HAL_TIM_PWM_Start(&tb6600->timer,tb6600->Channel);
 	tb6600->timer.Instance->ARR=(tb6600->Speed*2);
-	tb6600->timer.Instance->CCR1=(tb6600->Speed);
+	tb6600->timer.Instance->CCR1=(tb6600->Speed)*0.2;
 	
 }
 //#############################################################################################
@@ -230,12 +228,12 @@ void tb6600_Movemm(tb6600_t *tb6600,float Millimeters)
 	float Degree=(Millimeters/7.5)*360; // motor moves 7.5mm per 360 degree for nema 17 on a linear guide whose dia is 8mm
 	float limit=(tb6600->PulsePerRev)*(Degree/360);
 	tb6600->Count=limit;
-	for(int i=0;i<=limit;i++)
+	for(int i=0;i<=tb6600->Count;i++)
 	{
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_SET);
-		delay_us(tb6600);
+		delay_us(tb6600,2);
 		HAL_GPIO_WritePin(tb6600->pulse_gpio,tb6600->pulse_pin,GPIO_PIN_RESET);
-		delay_us(tb6600);   
+		delay_us(tb6600,(tb6600->Speed*2)-2);   
 	}
 }
 //#############################################################################################
@@ -244,7 +242,7 @@ void tb6600_Movemm(tb6600_t *tb6600,float Millimeters)
 void tb6600_Movemm_tim(tb6600_t *tb6600,uint16_t Millimeters)
 {
 	tb6600->timer.Instance->ARR=(tb6600->Speed*2);
-	tb6600->timer.Instance->CCR1=(tb6600->Speed);
+	tb6600->timer.Instance->CCR1=(tb6600->Speed)*0.2;
 	int Degree=(Millimeters/7.5)*360; // motor moves 7.5mm per 360 degree for nema 17 on a linear guide whose dia is 8mm
 	tb6600->Count=(tb6600->PulsePerRev)*(Degree/360);
 	HAL_TIM_PWM_Start(&tb6600->timer,tb6600->Channel);

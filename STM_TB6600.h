@@ -99,7 +99,7 @@ typedef enum
 				Fast 		= 75,	 //8mm/sec (Dia=8mm)
         Medium  = 150, //4mm/sec (Dia=8mm)   
 				Slow		= 300, //2mm/sec (Dia=8mm)
-				VSlow		= 600  //1mm/sec (Dia=8mm)
+				VSlow		= 700  //1mm/sec (Dia=8mm)
 		} Speed;
 		
 //####################################################################################################################
