@@ -10,13 +10,10 @@ Usage
 Delay-based Control
 Provide a brief example of how to use delay-based control:
 
-C++
-// Example code for delay-based control
+
 PWM-based Control
 Provide a brief example of how to use PWM-based control:
 
-C++
-// Example code for PWM-based control
 Features
 Precise step timing with delay-based control
 Efficient and scalable pulse output with PWM-based control
