@@ -6,16 +6,6 @@ This library provides an easy-to-use interface for controlling stepper motors us
 
 ## Getting Started
 
-### Prerequisites
-- STM microcontroller
-- Stepper motor
-- Driver module (e.g., TB6600)
-
-### Installation
-Clone the repository:
-```sh
-git clone https://github.com/MuhammadTayyab1002/STM-StepControl.git
-
 Usage
 Delay-based Control
 Provide a brief example of how to use delay-based control:
@@ -44,4 +34,16 @@ Feel free to reach out with any questions or feedback:
 
 GitHub: MuhammadTayyab1002
 Thank you for using STM-StepControl!
+
+### Prerequisites
+- STM microcontroller
+- Stepper motor
+- Driver module (e.g., TB6600)
+
+### Installation
+Clone the repository:
+```sh
+git clone https://github.com/MuhammadTayyab1002/STM-StepControl.git
+
+
 
